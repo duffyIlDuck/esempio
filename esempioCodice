@@ -35,12 +35,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <title>Login</title>
 </head>
 <body>
-    <h1>Login Utente</h1>
-    <?php if (isset($errore)) echo "<p style='color:red;'>$errore</p>"; ?>
-    <form method="post">
-        <label>Email: <input type="email" name="email" required></label><br>
-        <label>Password: <input type="password" name="password" required></label><br>
-        <button type="submit">Accedi</button>
-    </form>
+
 </body>
 </html>
