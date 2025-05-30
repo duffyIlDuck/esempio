@@ -1,0 +1,46 @@
+<?php
+session_start();
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $conn = new mysqli("localhost", "root", "", "visualizza_immagini");
+    if ($conn->connect_error) {
+        die("Connessione fallita: " . $conn->connect_error);
+    }
+    $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
+    $password = $_POST['password'];
+
+
+    $stmt = $conn->prepare("SELECT password FROM utenti WHERE email = ?");
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $stmt->bind_result($hash);
+    $stmt->fetch();
+    $stmt->close();
+
+
+    if ($hash && $password === $hash) {
+        setcookie("email", $email, time() + 86400, "/");
+        header("Location: visualizzaImmagini.php");
+        exit();
+    } else {
+        $errore = "Credenziali non valide.";
+    }
+}
+?>
+
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+</head>
+<body>
+    <h1>Login Utente</h1>
+    <?php if (isset($errore)) echo "<p style='color:red;'>$errore</p>"; ?>
+    <form method="post">
+        <label>Email: <input type="email" name="email" required></label><br>
+        <label>Password: <input type="password" name="password" required></label><br>
+        <button type="submit">Accedi</button>
+    </form>
+</body>
+</html>
